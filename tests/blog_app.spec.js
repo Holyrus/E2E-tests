@@ -166,10 +166,10 @@ describe('Blog app', () => {
 
     describe('When four blogs exists', () => {
       beforeEach(async ({ page }) => {
-        await createBlog(page, 'Last Initial blog', 'playwright', 'http://example', '1')
-        await createBlog(page, 'Third Initial blog', 'playwright', 'http://example', '2')
-        await createBlog(page, 'Second Initial blog', 'playwright', 'http://example', '3')
         await createBlog(page, 'First Initial blog', 'playwright', 'http://example', '4')
+        await createBlog(page, 'Last Initial blog', 'playwright', 'http://example', '1')
+        await createBlog(page, 'Second Initial blog', 'playwright', 'http://example', '3')
+        await createBlog(page, 'Third Initial blog', 'playwright', 'http://example', '2')
       })
 
       test('All blogs arranged in the descending order for likes', async ({ page }) => {
@@ -177,13 +177,13 @@ describe('Blog app', () => {
         await page.locator('li').filter({ hasText: 'Second Initial blog' }).getByRole('button', { name: 'View' }).click()
         await page.locator('li').filter({ hasText: 'Third Initial blog' }).getByRole('button', { name: 'View' }).click()
         await page.locator('li').filter({ hasText: 'Last Initial blog' }).getByRole('button', { name: 'View' }).click()
-
-        const blogs = page.locator('.blog')
         
-        await expect(blogs.nth(0).locator('..').getByText('1')).toBeVisible()
-        await expect(blogs.nth(1).locator('..').getByText('2')).toBeVisible()
-        await expect(blogs.nth(2).locator('..').getByText('3')).toBeVisible()
-        await expect(blogs.nth(3).locator('..').getByText('4')).toBeVisible()
+        const blogList = await page.getByTestId('blog').all()
+
+        await expect(blogList[0].locator('..').filter({ hasText: '4'})).toBeVisible()
+        await expect(blogList[1].locator('..').filter({ hasText: '3'})).toBeVisible()
+        await expect(blogList[2].locator('..').filter({ hasText: '2'})).toBeVisible()
+        await expect(blogList[3].locator('..').filter({ hasText: '1'})).toBeVisible()
       })
     })
   })
